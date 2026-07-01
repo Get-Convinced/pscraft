@@ -1,0 +1,22 @@
+# Crestpoint Foods - Product Demo
+- **Date/Time (IST):** 2026-02-12 11:00
+- **Platform:** Zoom
+- **Attended:** Priya Nair, Dana Cole, Nina Brooks, Raj Patel
+- **Emails:** priya.nair@nimbusdata.com, dana.cole@nimbusdata.com, nina.brooks@crestpointfoods.com, rpatel@crestpointfoods.com
+- **Duration:** 47 min
+- **Report:** https://rec.example/crestpoint-demo
+
+## Transcript
+**Dana Cole** [00:15]: Nina, Raj, Priya will run you through the platform today.
+**Priya Nair** [00:30]: Great, so here you can see the main dashboard. Here you can see our incidents view, and over here is the catalog, and if I click here you can see lineage, and this tab is where you can see all the integrations we support.
+**Nina Brooks** [01:05]: Before we go too far, our actual problem is duplicate records in our customer table. Analysts keep pulling numbers that double-count. Does the tool speak to that?
+**Priya Nair** [01:25]: Yeah so let me also show you the alerting, here you can see how you can set up an alert, and here you can see the reporting module, it is really flexible.
+**Nina Brooks** [01:48]: Right, but on the duplicates specifically?
+**Priya Nair** [02:05]: We have a whole data quality suite, let me show you the rules engine, here you can see you can add lots of rules.
+**Raj Patel** [02:30]: Practical question. Our customer master is on an on-prem SQL Server, it is not in the cloud warehouse. Does your tool actually connect to on-prem SQL Server?
+**Priya Nair** [02:52]: Yeah, we support everything, all the databases, so that will be fine.
+**Raj Patel** [03:08]: You support on-prem SQL Server directly? Because that is the whole question for us.
+**Priya Nair** [03:22]: We support everything, do not worry about it. Anyway here you can see the lineage graph, it is really powerful, let me expand this.
+**Nina Brooks** [03:45]: Okay. We are almost out of time.
+**Priya Nair** [03:58]: No problem, I can also show you the API and the admin panel if you want, there is a lot more.
+**Raj Patel** [04:15]: Let us just set up a trial and see if it connects to our environment.

@@ -1,0 +1,19 @@
+{
+  "org_name": "Nimbus Data",
+  "product_oneliner": "Agentless data-pipeline observability for dbt and Snowflake teams that detects freshness and volume incidents before the business does.",
+  "as_of_date": "2026-03-10",
+  "org_domains": ["nimbusdata.com"],
+  "scope": {"date_from": null, "date_to": null, "sample_deal_ids": null},
+  "terminology": {"stall_label": "Hold", "recording_link_label": "Recording", "technical_win_label": "Technical Win"},
+  "currency": {"symbol": "$", "code": "USD", "style": "short"},
+  "stage_map": {"Discovery": "tech_discovery", "Demo": "tailored_demo", "POC / Evaluation": "poc_pov", "Technical Validation": "tech_validation", "Closed Won": "won", "Closed Lost": "lost"},
+  "stage_order": ["intro_qualify", "tech_discovery", "tailored_demo", "poc_pov", "tech_validation", "proposal", "negotiation", "won", "lost", "stalled"],
+  "stalled_definition": {"derived_from": "config", "stage_names": ["Hold"], "inactivity_days": null},
+  "technical_win": {"source": "inferred", "crm_or_platform_flag_column": null},
+  "scoring_universe": {"score_only_calls_with_technical_explainer": true, "include_external_accounts_without_crm_deal": true, "exclude_call_status": ["no_show", "aborted"], "exclude_transcript_quality": ["poor"], "internal_calls_are_context_only": true},
+  "roles": {"overrides": [], "name_fixes": []},
+  "rubric": {"overrides": {}},
+  "reporting": {"levels": ["call", "se", "deal"], "quarter_trend": "auto", "min_quarters": 2},
+  "min_calls_to_rank_se": 1,
+  "caveats": ["The corpus is calls and demos only; absence of a behavior is flagged, not penalized.", "Craft is kept separate from the Technical Win and the business outcome.", "PSCraft scores the technical explainer on each call, whoever carried that role."]
+}

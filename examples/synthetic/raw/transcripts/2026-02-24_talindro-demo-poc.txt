@@ -1,0 +1,22 @@
+# Talindro Freight - Tailored Demo and POC Scoping
+- **Date/Time (IST):** 2026-02-24 15:00
+- **Platform:** Zoom
+- **Attended:** Sam Rivera, Dana Cole, Marcus Whitfield, Elena Torres
+- **Emails:** sam.rivera@nimbusdata.com, dana.cole@nimbusdata.com, mwhitfield@talindro.com, etorres@talindro.com
+- **Duration:** 51 min
+- **Report:** https://rec.example/talindro-demo
+
+## Transcript
+**Sam Rivera** [00:30]: I built this on your billing-freshness case. Here is the punchline first: this is the alert that would have fired the morning of your double-billing incident, a day before finance saw it. Let me show you how it got there.
+**Marcus Whitfield** [00:55]: Okay, that is the exact scenario. Show me.
+**Sam Rivera** [01:10]: We read dbt's manifest directly, so every one of your four hundred models gets a freshness and volume monitor with no config. Context is your billing table; the capability is anomaly detection on refresh cadence; the impact is finance never sees a stale number first.
+**Marcus Whitfield** [01:38]: And this is dbt-native, we do not write rules per table?
+**Sam Rivera** [01:50]: Correct, it is inferred from your dbt graph. That is the main place we differ from Sentinel, they have you author checks per asset, which at four hundred models is the reason those trials stall. Ours is agentless and dbt-native, so coverage is day one, not month three.
+**Elena Torres** [02:20]: On security, you are reading from Snowflake. Where does our data physically go, and is there an agent?
+**Sam Rivera** [02:38]: No agent in your data plane, that was your hard requirement. We run metadata and query-based checks through a read-only Snowflake role. Row data stays in your account, we store metadata only, region pinned to your Snowflake region. We are SOC 2 Type II and I will send the report and our data-flow diagram today so your review starts now, not at the end.
+**Elena Torres** [03:05]: That actually answers my three biggest questions. Send those over.
+**Sam Rivera** [03:20]: Marcus, let me scope the proof of concept against the bar you set, not a vague trial. Success is: detect ninety percent of freshness and volume incidents before a business user, and mean time to resolve under thirty minutes. We run it on billing plus two upstream schemas, three weeks, you own validation, I own setup. If we hit those two numbers, is that a technical yes?
+**Marcus Whitfield** [03:52]: If you hit those two numbers on our billing pipeline, yes, that is the technical decision made.
+**Sam Rivera** [04:10]: Then that is the exit criteria in writing, I will put it in a one-page plan today with those two thresholds and the owners. Last thing, so you can carry this internally, I will give you a short before-and-after on the billing incident and the ROI math so you are not selling this alone to your VP.
+**Marcus Whitfield** [04:35]: That is helpful, the VP will ask exactly that.
+**Dana Cole** [04:50]: I will get the paperwork moving in parallel so security and procurement are not the long pole.

@@ -1,0 +1,20 @@
+# Crestpoint Foods - POC Readout
+- **Date/Time (IST):** 2026-03-05 14:00
+- **Platform:** Zoom
+- **Attended:** Priya Nair, Dana Cole, Nina Brooks, Raj Patel
+- **Emails:** priya.nair@nimbusdata.com, dana.cole@nimbusdata.com, nina.brooks@crestpointfoods.com, rpatel@crestpointfoods.com
+- **Duration:** 38 min
+- **Report:** https://rec.example/crestpoint-poc
+
+## Transcript
+**Priya Nair** [00:20]: So we have had the trial running for two weeks, I think it went really well, the dashboards are all up.
+**Raj Patel** [00:38]: From our side it did not, and here is the core issue. We never agreed what success looked like. There was no exit criteria, so we do not actually know what we were proving.
+**Nina Brooks** [00:58]: Right, we came in wanting to fix duplicate records, and I am not sure the trial ever touched that.
+**Priya Nair** [01:15]: Well the platform does a lot, we can add rules for duplicates too.
+**Raj Patel** [01:30]: The bigger blocker is the one I raised on day one. Our customer master is on-prem SQL Server. The trial only ever connected to the cloud warehouse. It never connected to the on-prem source, which is where the duplicates actually are.
+**Dana Cole** [01:52]: Let me jump in on the technical side. So the way our connector works, we can absolutely handle on-prem, you just point it at the database and it ingests, it is basically the same as any other source.
+**Raj Patel** [02:15]: Your own docs say the on-prem connector is in early access and read-through a cloud gateway. That is not the same, and nobody set that up in the trial.
+**Dana Cole** [02:35]: I mean, it should work, I would have to check the exact configuration, but I do not see why it would be a problem.
+**Raj Patel** [02:52]: That is the problem. The one thing we needed to prove, the on-prem connection, was never scoped and now I am hearing it might be early access. We cannot take that to our steering committee.
+**Nina Brooks** [03:10]: We are going to pause here. Without the on-prem piece proven, there is nothing for us to decide on.
+**Dana Cole** [03:28]: Understood, let me regroup internally and come back with a clear answer on the connector.

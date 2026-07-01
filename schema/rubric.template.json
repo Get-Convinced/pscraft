@@ -1,0 +1,145 @@
+{
+  "_doc": "PSCraft rubric — the pressure moves a PRESALES / technical-explainer interaction must make. PSCraft scores the TECHNICAL EXPLAINER on each call (role-inferred, title-agnostic): usually the SE/SC/SA, but if a seller carries the technical explaining, they are scored in THIS lane for those moves and recognized for it. A presales interaction builds or loses TECHNICAL CONVICTION toward a Technical Win. This rubric scores the MOVES that build that conviction. Scores 1-5, NA allowed. A model produces every score by reading calls in full; scripts only aggregate. Craft composite is the weighted mean of the technical explainer's APPLICABLE (non-NA) dimensions. The Technical Win and any deal outcome are reported SEPARATELY and NEVER folded into the composite. Company/CRM/stack agnostic; override per org via config.rubric.overrides + config.roles.",
+
+  "scale": {
+    "5": "Textbook — the move was made fully and well; a coaching example.",
+    "4": "Strong — made with minor gaps.",
+    "3": "Competent — adequate, met the bar.",
+    "2": "Weak — attempted but materially mishandled.",
+    "1": "Absent/harmful — the move was needed and not made, or made badly enough to cost technical conviction.",
+    "NA": "Not this move's stage yet, not the explainer's job, or not observable in the corpus. Excluded from the composite (not a zero)."
+  },
+
+  "evidence": {
+    "precedence": ["transcript", "poc_criteria", "crm_stage_and_meddic", "se_platform", "rep_notes"],
+    "on_conflict": "Transcript wins on CRAFT. A POC/POV success-criteria document is authoritative for WHAT the agreed exit criteria were (you cannot judge 'held to criteria' without it), but the transcript is authoritative for whether the explainer actually scoped and controlled them on the call. CRM, SE-platform exports, and notes corroborate stage, technical-win flags, and evaluation state; they never override what the transcript plainly shows.",
+    "incomplete_corpus_principle": "Calls are one channel; email, Slack, async POC work, and in-person whiteboarding are absent. Where an expected move is simply NOT VISIBLE, score NA with low confidence, NOT a low mark. CRITICAL SCOPE: this protects only the genuinely UNOBSERVABLE. A move that IS observable in-corpus but done badly (a feature-dump, a hand-waved security answer, a POC with no exit criteria, a false 'yes we can do that') is observably mishandled and scores LOW; it is never NA. Off-channel protection may move a score to NA but NEVER inflate it upward. Still TRACK progression: stage advancement and SE-platform state are independent evidence the deal moved even when the move happened off-corpus. Absence of evidence is not evidence of absence; but a visible failure is evidence of failure."
+  },
+
+  "confidence": {
+    "high": "Multiple good-quality calls clearly attributable to this explainer; move directly observed.",
+    "medium": "One good call, or partial attribution/quality.",
+    "low": "Sparse/poor calls, ambiguous attribution, or a judgment leaning on absence — directional only."
+  },
+
+  "groups": {
+    "discovery":              "Technical current-state, constraints, and measurable success criteria the rest of the cycle is judged against. (owner: technical explainer)",
+    "demo":                   "A tailored demo that shows only what advances THIS buyer's pain, tied to business impact. Anti-feature-dump. (owner: technical explainer)",
+    "validation":             "POC/POV scoping and exit-criteria control: define measurable criteria up front, timebox, drive to a written technical decision. (owner: technical explainer + AE)",
+    "rigor":                  "Technical precision under scrutiny: accurate, substantive, and honest at the edge of knowledge. (owner: technical explainer)",
+    "objection_competition":  "Handle technical / security / integration objections with evidence, and shape the technical criteria so your architecture wins. (owner: technical explainer)",
+    "enablement":             "Arm the technical champion to win the internal review, and make the status-quo the risky option. (owner: technical explainer + AE)"
+  },
+
+  "dimensions": [
+    {"id":"TD_DEPTH","group":"discovery","name":"Technical discovery depth","arc":true,"due_from":"tech_discovery",
+     "anchors":"Did the explainer map the buyer's technical current state and turn it into measurable success criteria? 5: surfaced current architecture / stack / integration surface / data flows AND elicited the buyer's own quantified technical success criteria (what 'working' means, measurably). 3: partial current-state, criteria left soft. 1: jumped to demo with no technical discovery, or asked ICP-obvious questions a homepage answers. NA: pure internal/handoff call with no buyer. Buyer correcting the explainer on a basic of their OWN stack is a hard 1-2."},
+
+    {"id":"DEMO_CRAFT","group":"demo","name":"Tailored-demo craft","arc":true,"due_from":"tailored_demo",
+     "anchors":"Was this a tailored business conversation or a feature tour? Judge from ALL demo lenses (see demo_calibration) and report a per-lens read. 5: every shown capability was tied to a discovered pain and passed the 'So What?' test (a stated business impact), structured Context->Capability->Impact, and where apt opened with the most compelling outcome first. 3: mostly relevant but some untethered features or a generic linear flow. 1: feature-dump ('here you can see...') with no linked pain, showed everything, stated no impact. NA: no demo occurred on this call (pure discovery or a working session). Screen-share narration is NOT credit; a feature shown without a 'so what' is a demo-crime instance, not craft."},
+
+    {"id":"POC_SCOPE","group":"validation","name":"POC/POV scoping & exit-criteria control","arc":true,"off_channel_sensitive":true,"due_from":"poc_pov",
+     "anchors":"Did the explainer define and CONTROL a measurable technical evaluation? 5: co-defined measurable exit criteria tied to the discovered success metrics, set a timeline and owners (a mutual plan), and drove toward a written technical decision; where a POC criteria doc exists, the call shows the explainer scoping or negotiating it. 3: a POC agreed but criteria vague or open-ended. 1: 'let's just get you in the product' with no criteria, no timebox, no exit. NA: pre-POC stage (early discovery / first demo) OR no evaluation in play. OFF-CHANNEL: if the scoping plainly happened off-corpus, NA low-confidence; a visibly criteria-less POC IS observable and scores low."},
+
+    {"id":"SO_ACCURACY","group":"rigor","name":"Technical accuracy","arc":true,"due_from":"tech_discovery",
+     "anchors":"5: precise AND specific — concrete, verifiable, correct technical details, and corrected own errors where they arose. 3: no false claims but generic/imprecise. CRITICAL: 'made no overclaim' ALONE is a 3, NEVER a 5; a pitch too vague to be wrong is not accuracy (that is hand-waving, see SO_SUBSTANCE). 1: a material false or overstated technical claim left standing (a capability that does not exist, a false integration/security/scale claim). NA: no technical assertion arose. GATED at non-technical stages."},
+
+    {"id":"SO_SUBSTANCE","group":"rigor","name":"Substance over hand-waving","arc":true,"due_from":"tech_discovery",
+     "anchors":"Did the explainer explain HOW, concretely, or sell buzzwords? 5: concrete and specific — named the actual mechanism, architecture, data model, or integration and how it works on the buyer's real process. 3: a mix of specifics and generic claims. 1: hand-waving ('AI handles it', 'fully automated', 'it just works') with no mechanism, no specifics, no proof. A claim being technically true does NOT make it substantive. NA: no capability discussion arose. GATED at non-technical stages."},
+
+    {"id":"KN_GAP","group":"rigor","name":"Knowledge-gap handling","arc":true,"gated":true,
+     "anchors":"How the explainer handles a question outside their depth, with the buyer's confidence intact. 5: acknowledged the gap plainly, committed to a specific owned follow-up or brought the right expert, AND the buyer stayed confident. 3: deflected but recovered. 1: bluffed/overclaimed, went evasive, or left a direct technical question hanging. HARD LIMIT: being unable to DEMONSTRATE the core capability the meeting was for and punting it to 'later' is a PROOF/PREP failure (score DEMO_CRAFT/POC_SCOPE low, KN_GAP <= 2), not graceful handling. SENTIMENT GATE: if the buyer was annoyed or disengaged, a 'committed to follow-up' is a hollow punt, cap at 2. NA: no out-of-depth question arose."},
+
+    {"id":"TECH_OBJ","group":"objection_competition","name":"Technical / security / integration objection handling","arc":true,"gated":true,
+     "anchors":"When the buyer raises a technical, security, integration, scale, or compliance concern, does the explainer address it with evidence and no false 'yes'? 5: met the concern head-on with specific verifiable evidence (an architecture answer, a doc, a config, a security posture, a reference), recognized the underlying gap rather than deflecting. 3: addressed adequately but generically. 1: hand-waved, gave a false 'yes we can do that' with no proof, or left a hard technical objection hanging. NA: no technical/security/integration objection surfaced in-corpus (observability-gated). The buyer's objection is the setup; quote the EXPLAINER's reply."},
+
+    {"id":"COMPETE","group":"objection_competition","name":"Competitive technical displacement","arc":true,"gated":true,"due_from":"tailored_demo",
+     "anchors":"Did the explainer shape the technical decision criteria toward your architecture's strengths and away from the incumbent's? 5: established differentiated technical criteria the buyer adopts, or set a trap the incumbent fails, grounded in a real and correct competitive distinction. 3: differentiated on request. 1: let the buyer's incumbent-favoring or RFP-imposed criteria stand unchallenged, or made a false/oversimplified competitive claim. NA: no competitor/alternative in play in-corpus."},
+
+    {"id":"CHAMPION","group":"enablement","name":"Technical-champion enablement & multi-threading","arc":true,"due_from":"tailored_demo",
+     "anchors":"Did the explainer arm the technical buyer/champion to win the internal review when the explainer is NOT in the room? 5: equipped the champion with the artifacts, narrative, and answers to sell internally, and engaged the real technical decision-makers and blockers (security, architecture, IT, data). 3: some support or a second technical contact. 1: single-threaded, demo-and-leave, champion left to build the technical case alone. NA: no champion / technical buyer yet (first intro)."},
+
+    {"id":"STATUS_QUO","group":"enablement","name":"Defeating technical status-quo","arc":true,"due_from":"tech_discovery",
+     "anchors":"Did the explainer make 'do nothing / build it ourselves / stay on the incumbent' the risky option? 5: surfaced the technical cost and risk of the status quo (or of a DIY build) with specifics the buyer felt. 3: mild. 1: left the status quo unchallenged, or accepted 'we'll just keep doing it manually / we could build this' without a grounded counter. NA: too early or not observable."}
+  ],
+
+  "demo_calibration": {
+    "_doc": "How to score DEMO_CRAFT from multiple methodology lenses. Screen-share transcripts are narration-heavy ('so here you can see...'); do NOT reward feature count. Map each shown capability to whether it was requested/relevant and whether a business impact was stated. Report DEMO_CRAFT with a per-lens read so the operator sees the demo from all angles, not one number.",
+    "so_what_test": "A shown feature earns credit only if the explainer or the buyer states WHY it matters to this buyer's pain or economics. A capability shown with no 'so what' is a feature-dump instance, not craft.",
+    "lenses": {
+      "demo2win_tell_show_tell": "Context -> Capability -> Impact for each topic; a business conversation, not a product walkthrough.",
+      "great_demo_last_thing_first": "Open with the most compelling outcome (the 'last thing'), then peel back the how; credit an outcome-first structure.",
+      "anti_feature_dump": "'Demo crimes': showing everything, unrequested tangents, tool-tour narration, features with no linked pain. Each is a deduction.",
+      "persona_tailoring": "Was the depth and altitude tuned to who is in the room (economic buyer vs technical buyer vs end user)?"
+    }
+  },
+
+  "technical_win": {
+    "_doc": "The craft-side OUTCOME anchor. Model-inferred from the corpus, reported SEPARATELY from the craft composite and from any business (deal) outcome. NEVER folded into the composite. This is the presales analog of call-craft's won/lost/stalled: it is an outcome, not a craft score.",
+    "definition": "A Technical Win is reached when the prospect judges the solution technically SUPERIOR to the alternatives AND the specific gaps or concerns the prospect voiced were recognized and addressed, with written confirmation where available.",
+    "states": ["won_written", "won_verbal", "in_validation", "lost_technical", "not_reached", "na"],
+    "evidence_rule": "Infer from what is on the recordings, plus the POC criteria doc and SE-platform flag if provided. A CRM or SE-platform 'technical win' checkbox with no corroborating call moment is a CLAIM, tagged as such, never itself proof.",
+    "gap_ledger": "List each gap/concern the prospect voiced and whether it was recognized and addressed: addressed_written | addressed_verbal | acknowledged_open | ignored. A Technical Win requires no ignored BLOCKING gap."
+  },
+
+  "stage_expectations": {
+    "_doc": "Which moves are DUE at which stage — the NA logic. A move not yet due at a call's stage is NA, not a failure. A model infers each call's SE stage (Phase 6; the operator confirms). When no CRM/stage exists, it infers the stage from the call's own arc.",
+    "stages": ["intro_qualify", "tech_discovery", "tailored_demo", "poc_pov", "tech_validation", "proposal_negotiation"],
+    "legend": {
+      "due": "expected at this stage; score it",
+      "secondary": "score if it arises; do not penalize absence heavily",
+      "emerging": "early; lean NA unless clearly attempted",
+      "partial": "credit partial attempts",
+      "na": "not due at this stage; exclude from composite",
+      "gated": "score only if observable in-corpus, else NA",
+      "due_if_competitor": "due when a competitor/alternative is in play, else NA"
+    },
+    "matrix": {
+      "TD_DEPTH":     {"intro_qualify":"partial","tech_discovery":"due","tailored_demo":"due","poc_pov":"secondary","tech_validation":"secondary","proposal_negotiation":"na"},
+      "DEMO_CRAFT":   {"intro_qualify":"na","tech_discovery":"na","tailored_demo":"due","poc_pov":"due","tech_validation":"secondary","proposal_negotiation":"na"},
+      "POC_SCOPE":    {"intro_qualify":"na","tech_discovery":"na","tailored_demo":"emerging","poc_pov":"due","tech_validation":"due","proposal_negotiation":"secondary"},
+      "SO_ACCURACY":  {"intro_qualify":"gated","tech_discovery":"due","tailored_demo":"due","poc_pov":"due","tech_validation":"due","proposal_negotiation":"gated"},
+      "SO_SUBSTANCE": {"intro_qualify":"gated","tech_discovery":"due","tailored_demo":"due","poc_pov":"due","tech_validation":"due","proposal_negotiation":"gated"},
+      "KN_GAP":       {"intro_qualify":"gated","tech_discovery":"gated","tailored_demo":"gated","poc_pov":"gated","tech_validation":"gated","proposal_negotiation":"gated"},
+      "TECH_OBJ":     {"intro_qualify":"gated","tech_discovery":"gated","tailored_demo":"gated","poc_pov":"gated","tech_validation":"gated","proposal_negotiation":"gated"},
+      "COMPETE":      {"intro_qualify":"gated","tech_discovery":"gated","tailored_demo":"due_if_competitor","poc_pov":"due_if_competitor","tech_validation":"due_if_competitor","proposal_negotiation":"due_if_competitor"},
+      "CHAMPION":     {"intro_qualify":"na","tech_discovery":"emerging","tailored_demo":"due","poc_pov":"due","tech_validation":"due","proposal_negotiation":"due"},
+      "STATUS_QUO":   {"intro_qualify":"emerging","tech_discovery":"due","tailored_demo":"due","poc_pov":"due","tech_validation":"due","proposal_negotiation":"secondary"}
+    }
+  },
+
+  "role_archetypes": {
+    "_doc": "PSCraft scores the TECHNICAL EXPLAINER on each call. Role inference (Phase 5) tags, per call, who carried the technical-explainer load, title-agnostic. All technical explainers are scored on the SAME SE rubric; 'weights' shift emphasis by kind, and 'seniority_bars' shift the expected BAR. 'kind' controls how the report frames them. A person present who did NOT carry the technical-explainer role is recognized as context and NOT scored on the SE rubric (ae-nontechnical).",
+
+    "solution-engineer": {"label":"Solutions / Sales Engineer (dedicated presales)","kind":"dedicated_se","excluded_from_ranking":false,"ranked_lane":"technical_explainer","bar":3.5,
+      "responsible_for":"The technical explainer end to end: technical discovery, tailored demo, POC/POV scoping and control, technical accuracy and substance, objection and competitive handling, champion enablement, defeating status-quo.",
+      "responsible_dims":["TD_DEPTH","DEMO_CRAFT","POC_SCOPE","SO_ACCURACY","SO_SUBSTANCE","KN_GAP","TECH_OBJ","COMPETE","CHAMPION","STATUS_QUO"],
+      "weights":{"TD_DEPTH":1.5,"DEMO_CRAFT":1.5,"POC_SCOPE":1.5,"SO_ACCURACY":1.25,"SO_SUBSTANCE":1.25,"KN_GAP":1.0,"TECH_OBJ":1.5,"COMPETE":1.25,"CHAMPION":1.25,"STATUS_QUO":1.0}},
+
+    "seller-doing-technical": {"label":"Seller performing the technical-explainer role","kind":"seller_doing_technical","excluded_from_ranking":false,"ranked_lane":"technical_explainer","bar":3.25,
+      "responsible_for":"An AE or seller who carried the technical explaining on a call. Scored on the SE rubric FOR THOSE MOVES and recognized for it; framed in the report as a seller wearing the SE hat. Their commercial moves (price, close) are out of PSCraft's scope.",
+      "responsible_dims":["TD_DEPTH","DEMO_CRAFT","POC_SCOPE","SO_ACCURACY","SO_SUBSTANCE","KN_GAP","TECH_OBJ","COMPETE","CHAMPION","STATUS_QUO"],
+      "weights":{"TD_DEPTH":1.5,"DEMO_CRAFT":1.5,"POC_SCOPE":1.5,"SO_ACCURACY":1.25,"SO_SUBSTANCE":1.25,"KN_GAP":1.0,"TECH_OBJ":1.5,"COMPETE":1.25,"CHAMPION":1.25,"STATUS_QUO":1.0}},
+
+    "se-leader": {"label":"SE Manager / Principal (leads and runs technical)","kind":"dedicated_se","excluded_from_ranking":false,"ranked_lane":"technical_explainer","bar":3.75,
+      "responsible_for":"Senior technical explainer who also parachutes into hard deals; held to the full SE rubric with extra weight on champion enablement, competitive displacement, and POC control.",
+      "responsible_dims":["TD_DEPTH","DEMO_CRAFT","POC_SCOPE","SO_ACCURACY","SO_SUBSTANCE","KN_GAP","TECH_OBJ","COMPETE","CHAMPION","STATUS_QUO"],
+      "weights":{"TD_DEPTH":1.25,"DEMO_CRAFT":1.5,"POC_SCOPE":1.75,"SO_ACCURACY":1.25,"SO_SUBSTANCE":1.25,"KN_GAP":1.0,"TECH_OBJ":1.5,"COMPETE":1.5,"CHAMPION":1.75,"STATUS_QUO":1.25}},
+
+    "ae-nontechnical": {"label":"AE / seller (non-technical role on the call)","kind":"other","excluded_from_scoring":true,"excluded_from_ranking":true,"bar":null,
+      "responsible_for":"Present but did not carry the technical-explainer role on this call. Recognized as context in the report, NOT scored on the SE rubric. If on another call this person DID carry the technical explaining, that call scores them as seller-doing-technical.",
+      "responsible_dims":[],"weights":{}},
+
+    "partner-external": {"label":"Partner / External / Customer","kind":"external","excluded_from_ranking":true,"excluded_from_scoring":true,"bar":null,
+      "responsible_for":"Channel/partner or customer-side participant. Never scored as one of the selling org's technical explainers.","responsible_dims":[],"weights":{}}
+  },
+
+  "seniority_bars": {"_doc":"Expected composite by SE level (config.roles.overrides[].seniority). The model INFERS the level from the calls when the operator does not set it; where neither operator guidance nor enough data exists, fall back to relative-to-cohort ranking with NO absolute bar (flag it low-confidence).","associate":3.0,"mid":3.25,"senior":3.5,"principal":3.75,"lead":3.75},
+
+  "composite": {
+    "formula":"sum(weight[dim]*score[dim] for non-NA dims) / sum(weight[dim] for non-NA dims)",
+    "na_excluded":true,"low_confidence_downweight":0.7,"min_dims_for_composite":4,
+    "outcomes_separate":true,
+    "_outcomes_note":"TWO outcome axes sit BESIDE the craft composite and NEVER enter the formula: (1) the Technical Win state + gap ledger (craft-side outcome), and (2) the business/deal outcome (won/lost/stalled, ARR, stage) when a CRM is present. A strong explainer who reached a Technical Win on a deal later lost to price is NOT marked down."
+  }
+}

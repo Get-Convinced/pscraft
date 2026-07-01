@@ -1,0 +1,24 @@
+# Talindro Freight - Technical Discovery
+- **Date/Time (IST):** 2026-02-10 10:30
+- **Platform:** Zoom
+- **Attended:** Sam Rivera, Dana Cole, Marcus Whitfield, Elena Torres
+- **Emails:** sam.rivera@nimbusdata.com, dana.cole@nimbusdata.com, mwhitfield@talindro.com, etorres@talindro.com
+- **Duration:** 42 min
+- **Report:** https://rec.example/talindro-disco
+
+## Transcript
+**Dana Cole** [00:20]: Thanks for making time. Sam leads solutions here, he is going to dig into the technical side and I will hang back.
+**Sam Rivera** [00:35]: Appreciate it Marcus. Before I show anything, I want to understand your current pipeline stack end to end. What are you running for orchestration and warehouse today?
+**Marcus Whitfield** [00:52]: We are on Airflow for orchestration, Snowflake as the warehouse, and dbt for transforms. About four hundred models.
+**Sam Rivera** [01:10]: And when a pipeline breaks or data goes stale, how do you find out today, walk me through the last real incident.
+**Marcus Whitfield** [01:28]: Honestly the finance team finds out. Two weeks ago the billing run used a table that had not refreshed for a day, and we found out when a customer got double billed. We had no alert.
+**Sam Rivera** [01:50]: So the failure mode is that the business catches freshness gaps before your team does. How often does that happen, roughly, and what does one of those cost you?
+**Marcus Whitfield** [02:12]: Maybe three or four a month that reach the business. The billing one took a full day to unwind and a lot of trust.
+**Sam Rivera** [02:30]: If we did this right, what would success actually look like to you, in numbers? What has to be true for you to say this worked?
+**Marcus Whitfield** [02:48]: We would catch the freshness and volume issues before finance does. I would want us detecting the large majority of incidents ourselves, and getting time to resolve down from a day to under half an hour.
+**Sam Rivera** [03:05]: Let me write that back: detect ninety percent of freshness and volume incidents before a business user reports them, and mean time to resolve under thirty minutes. That is the bar we should hold a proof of concept to. Does that match?
+**Marcus Whitfield** [03:22]: Yes, exactly that.
+**Elena Torres** [03:40]: I will just flag early, anything that touches our warehouse has to clear our security review. We are SOC 2 and we do not allow agents inside the data plane.
+**Sam Rivera** [03:58]: Noted, I will come to the next session ready on data residency and our agentless model so your review is not a surprise late in the cycle. Marcus, one more, what are you comparing us against?
+**Marcus Whitfield** [04:15]: We have Sentinel in a trial already. It is the incumbent name everyone knows.
+**Sam Rivera** [04:30]: Good to know. I will be specific about where we differ from Sentinel rather than hand-wave it. Let me build a tailored demo on your exact billing-freshness scenario for next time, not a generic tour.

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PSCraft: a plain guide</title>
+<style>
+  :root{--ink:#1f2328;--muted:#5b626b;--faint:#878f99;--bg:#f6f5f2;--panel:#fff;--line:#e3e1db;--line-soft:#eeece7;--accent:#2f6f5e;--accent-soft:#e7f0ec;--warn:#9a5a18;--warn-soft:#f6ecdf;--blue:#2c5f86;--blue-soft:#e6eef4;--shadow:0 1px 2px rgba(30,35,40,.05),0 8px 24px rgba(30,35,40,.04)}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}
+  h1{font-size:38px;line-height:1.15;margin:0 0 16px;letter-spacing:-.01em}
+  .lede{font-size:19px;color:var(--muted);margin:0;max-width:62ch}
+  nav.toc{margin:32px 0 0;padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  nav.toc p{margin:0 0 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:34px}
+  nav.toc li{margin:5px 0;break-inside:avoid}nav.toc a{color:var(--ink);text-decoration:none}nav.toc a:hover{color:var(--accent);text-decoration:underline}
+  section{padding:46px 0;border-bottom:1px solid var(--line-soft)}section:last-of-type{border-bottom:none}
+  h2{font-size:26px;margin:0 0 8px;letter-spacing:-.01em}h2 .num{color:var(--faint);font-weight:600;font-size:18px;margin-right:10px}
+  .sub{color:var(--muted);margin:0 0 22px;font-size:17px;max-width:64ch}
+  h3{font-size:18px;margin:30px 0 8px}p{margin:0 0 14px}ul,ol.body{margin:0 0 16px;padding-left:22px}li{margin:6px 0}strong{font-weight:600}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:var(--shadow);margin:18px 0}.card h3{margin-top:0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:680px){.grid2{grid-template-columns:1fr}nav.toc ol{columns:1}h1{font-size:30px}}
+  .pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 9px;border-radius:20px;vertical-align:middle}
+  .pill.req{background:var(--accent-soft);color:var(--accent)}.pill.opt{background:var(--blue-soft);color:var(--blue)}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}tr:last-child td{border-bottom:none}td.k{font-weight:600;white-space:nowrap}
+  pre.cmd{background:#1f2328;color:#e9e7e1;border-radius:10px;padding:14px 16px;overflow:auto;font-size:14px;margin:14px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;background:var(--line-soft);padding:1px 6px;border-radius:6px}
+  pre.cmd code{background:none;padding:0;color:inherit}
+  .note{background:var(--warn-soft);border:1px solid #eaddc9;border-radius:10px;padding:14px 18px;margin:16px 0}
+  .quiet{background:var(--accent-soft);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:15px}
+  footer{padding:40px 0;color:var(--faint);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="kicker">PSCraft</p>
+  <h1>Audit a presales team from the calls they actually run.</h1>
+  <p class="lede">PSCraft reads a sales-engineering team's real call and demo transcripts and grades the person who did the technical explaining on each one, then hands you one interactive report. It keeps three things separate: how well the technical case was made, whether the solution won on the merits, and what happened to the deal.</p>
+  <nav class="toc">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#what">What it is</a></li>
+      <li><a href="#axes">Three separate reads</a></li>
+      <li><a href="#who">Who gets scored</a></li>
+      <li><a href="#give">What you give it</a></li>
+      <li><a href="#rubric">What it grades</a></li>
+      <li><a href="#report">How to read the report</a></li>
+      <li><a href="#run">How to run it</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+    </ol>
+  </nav>
+</header>
+
+<section id="what">
+  <h2><span class="num">1</span>What it is</h2>
+  <p class="sub">A presales audit that reads every call in full and shows its work.</p>
+  <p>Point PSCraft at a folder of call and demo transcripts. It researches your company off the web to learn your product, your competitors, and your security posture, reads each call one at a time, and scores the technical explainer on a rubric of the moves a technical sale has to make. Numbers only appear once they aggregate; open any call and you see the transcript line, the failure, and why it cost you.</p>
+  <p>It is the presales sibling of call-craft, which does the same for account executives. The engine is shared; the judgment is rebuilt for the sales-engineering job.</p>
+</section>
+
+<section id="axes">
+  <h2><span class="num">2</span>Three separate reads, never blended</h2>
+  <p class="sub">The most common mistake in judging presales is mixing these up. PSCraft keeps them apart.</p>
+  <div class="grid2">
+    <div class="card"><h3>Craft</h3><p>How well the technical case was made, a 1 to 5 score across the rubric. A great engineer on a deal lost to price is not marked down.</p></div>
+    <div class="card"><h3>Technical Win</h3><p>Did the buyer judge the solution superior, and were the specific gaps they raised actually closed? Tracked with a gap ledger per deal.</p></div>
+    <div class="card"><h3>Business outcome</h3><p>Won, lost, or stalled, and the revenue, straight from your CRM when you provide one.</p></div>
+    <div class="card"><h3>Why it matters</h3><p>An engineer can run a flawless cycle and still lose the deal, or win the technical evaluation and lose on paper. Reading these as one number hides both.</p></div>
+  </div>
+</section>
+
+<section id="who">
+  <h2><span class="num">3</span>Who gets scored</h2>
+  <p class="sub">The technical explainer on each call, whoever that was.</p>
+  <p>PSCraft does not go by job title. On each call it works out who carried the technical explaining, the discovery, the demo, the POC scoping, the security answers, and scores that person. Usually it is the sales engineer. When a seller carries the technical work themselves, they are scored for it and shown as a seller wearing the SE hat. Someone in the room who did not do the technical work is context, not a score.</p>
+</section>
+
+<section id="give">
+  <h2><span class="num">4</span>What you give it</h2>
+  <p class="sub">Only transcripts are required. Everything else is asked for once and never blocks a run.</p>
+  <table>
+    <tr><th>Input</th><th>Needed</th><th>What it adds</th></tr>
+    <tr><td class="k">Call / demo transcripts</td><td><span class="pill req">Required</span></td><td>Read.ai, Gong, Chorus, Fireflies, Otter, Zoom, or plain text. The thing every score is read from.</td></tr>
+    <tr><td class="k">CRM deal export</td><td><span class="pill opt">Optional</span></td><td>The funnel, the business outcome, and the CRM-vs-call trust check.</td></tr>
+    <tr><td class="k">POC / POV criteria docs</td><td><span class="pill opt">Optional</span></td><td>The exit criteria POC scoping is judged against.</td></tr>
+    <tr><td class="k">Security questionnaires</td><td><span class="pill opt">Optional</span></td><td>SIG, CAIQ, VSQ, RFP, RFI. What the buyer asked in writing, for the objection check.</td></tr>
+    <tr><td class="k">SE-platform export</td><td><span class="pill opt">Optional</span></td><td>Vivun, Prelay, Cuvama. A technical-win flag, checked against the calls.</td></tr>
+    <tr><td class="k">Notes, solution designs</td><td><span class="pill opt">Optional</span></td><td>Corroborating signal, never treated as truth.</td></tr>
+  </table>
+  <p>No CRM means a craft-only run: no funnel and no trust check, but every call is still read and scored.</p>
+</section>
+
+<section id="rubric">
+  <h2><span class="num">5</span>What it grades</h2>
+  <p class="sub">The pressure moves a technical sale has to make, scored only where they were due.</p>
+  <p>Ten spokes: technical discovery, tailored-demo craft, POC scoping and exit-criteria control, technical and security objection handling, competitive technical displacement, champion enablement, defeating the status quo, plus technical accuracy, substance over hand-waving, and honest handling of a knowledge gap.</p>
+  <div class="card"><h3>Stage-aware</h3><p>A move that is not yet due at a call's stage is left out, not marked as a failure. Asking for a POC exit on a first discovery call is not expected, so it is scored N/A.</p></div>
+  <div class="card"><h3>The demo, from every lens</h3><p>A demo is read through several methodologies at once and against a simple test: a feature earns credit only if it was tied to a real pain and someone said why it mattered. A smooth tour of features nobody asked for scores low, not high.</p></div>
+  <div class="quiet"><strong>Craft is the explainer's own words.</strong> A buyer's objection is the setup; the score is what the explainer said back. Every strong or weak mark carries a verbatim line.</div>
+</section>
+
+<section id="report">
+  <h2><span class="num">6</span>How to read the report</h2>
+  <p class="sub">One self-contained HTML file, opens offline, no accounts.</p>
+  <ul>
+    <li><strong>Diagnosis</strong>, the team's shape: the floor moves, where deals die technically, and an independent maker-checker pass that re-graded a sample.</li>
+    <li><strong>Engineers</strong>, each explainer's radar against the team, the recurring failure in their own words, and a deal-by-deal breakdown of where the craft number came from.</li>
+    <li><strong>Deals</strong>, a post-mortem per deal: the technical arc, where conviction was lost, the POC arc, and the one change that would have mattered.</li>
+    <li><strong>Technical Win</strong>, the gap ledger per deal, every concern the buyer raised and whether it was closed, plus any CRM win flag checked against the calls.</li>
+    <li><strong>Trust check</strong>, the CRM and platform fields, shown as observed on a call, claimed but never earned, or contradicted.</li>
+    <li><strong>Trend</strong>, craft quarter over quarter, when the corpus spans enough quarters.</li>
+    <li><strong>Council</strong>, four independent reviewers read the whole book blind, then a synthesis of the highest-leverage changes.</li>
+  </ul>
+</section>
+
+<section id="run">
+  <h2><span class="num">7</span>How to run it</h2>
+  <p class="sub">Put your calls in a folder, point the tool at it, answer one short set of questions.</p>
+  <h3>Install it, once</h3>
+  <p>Install straight from the repo with the <a href="https://github.com/vercel-labs/skills"><code>skills</code></a> CLI. It works in Claude Code and many other assistants:</p>
+  <pre class="cmd"><code>npx skills add -g Get-Convinced/pscraft</code></pre>
+  <p>Restart your assistant afterward. Prefer to do it by hand? Clone the repo into <code>~/.claude/skills/pscraft</code>.</p>
+  <h3>Then use it</h3>
+  <pre class="cmd"><code>/pscraft ./my-team-calls</code></pre>
+  <p>It asks once for any optional inputs, tells you which engine it is using and roughly how much reading the run involves, then does the work: research, reading, scoring, the Technical Win, post-mortems, a second independent check, and the council. You get one <code>report.html</code> back.</p>
+  <div class="note"><strong>Try it with no data of your own.</strong> A fictional example ships in <code>examples/synthetic/raw</code>. Run <code>/pscraft ./examples/synthetic/raw</code> to see a full report, including a strong SE, a feature-dump demo, and a CRM win flag the calls do not back.</div>
+</section>
+
+<section id="privacy">
+  <h2><span class="num">8</span>Privacy</h2>
+  <p class="sub">Your data stays with you.</p>
+  <p>PSCraft ships with no keys and no one else's data. By default your transcripts, CRM data, documents, and the finished report stay inside your own assistant session and never leave your machine. In the optional bring-your-own-API mode the only thing sent out is transcript text, and only to the service you chose. The tool blocks its own key file and any working data from ever being committed.</p>
+</section>
+
+<footer>A plain-language guide to the PSCraft skill. This page is self-contained and opens offline.</footer>
+
+</div>
+</body>
+</html>

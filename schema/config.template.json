@@ -1,0 +1,159 @@
+{
+  "_doc": "PSCraft per-run configuration. Everything org-specific lives here so the skill stays company/CRM/stack agnostic. Copy to <workdir>/config.json and fill. Leave stage_map/stage_order until you see the real stage labels in Phase 2, then rerun. PSCraft scores the TECHNICAL EXPLAINER on each call (see roles).",
+
+  "org_name": "",
+  "product_oneliner": "",
+  "as_of_date": "YYYY-MM-DD",
+  "org_domains": ["yourcompany.com"],
+  "_org_domains_doc": "Email domains of the SELLING org. Splits internal participants from external customers/partners and builds the roster keyed by email. Anyone on these domains is a candidate technical explainer; everyone else is external.",
+
+  "scope": {
+    "_doc": "Optional narrowing. null = whole corpus. Stated plainly in the report caveats.",
+    "date_from": null,
+    "date_to": null,
+    "sample_deal_ids": null,
+    "_sample_doc": "For a scoped pilot: list of deal_ids (or account names) to run before the full corpus. Set null for full run."
+  },
+
+  "terminology": {
+    "stall_label": "Hold",
+    "_stall_label_doc": "The operator's word for the parking stage: 'Hold' / 'Stalled' / 'Nurture' / 'Parked'.",
+    "recording_link_label": "Recording",
+    "technical_win_label": "Technical Win",
+    "_technical_win_doc": "The operator's word for the craft-side milestone: 'Technical Win' / 'Tech Validation' / 'POC Passed'."
+  },
+
+  "currency": {
+    "_doc": "Discovered from the data, not assumed. style 'short' formats large numbers as K/M/B; style 'indian' uses lakh/crore.",
+    "symbol": "$",
+    "code": "USD",
+    "style": "short"
+  },
+
+  "ingest": {
+    "transcripts_dir": "raw/transcripts",
+    "deals_csv": "raw/crm/deals.csv",
+    "stage_history_csv": "raw/crm/stage_history.csv",
+    "notes_csv": "raw/crm/notes.csv",
+    "poc_docs_dir": "raw/poc",
+    "map_docs_dir": "raw/map",
+    "security_qs_dir": "raw/security",
+    "solution_design_dir": "raw/design",
+    "se_platform_csv": "raw/se_platform/export.csv",
+    "_doc": "Override paths if the layout differs. *_columns map an export's real headers to canonical names (synonyms tried in order). POC/MAP/security/design inputs are DOCUMENTS (PDF/DOCX/MD/TXT) read in full by a model in Phase 3.5, never parsed by keyword. All optional; the run degrades cleanly when any are absent.",
+
+    "crm_columns": {
+      "deal_id": ["Record Id", "Deal Id", "Opportunity Id", "Id"],
+      "deal_name": ["Deal Name", "Opportunity Name", "Name"],
+      "account": ["Account Name", "Company", "Account"],
+      "owner": ["Deal Owner", "Owner", "Account Executive"],
+      "se_owner": ["Sales Engineer", "Solution Engineer", "SE", "Presales Owner"],
+      "stage": ["Stage", "Deal Stage"],
+      "amount_arr": ["Annual Recurring Revenue (INR)", "ARR", "Amount"],
+      "amount_otc": ["One Time Implementation (INR)", "One Time", "Implementation Fee"],
+      "created_time": ["Created Time", "Created", "Deal Created On"],
+      "closing_date": ["Closing Date", "Close Date"],
+      "products": ["Products Offered", "Products"],
+      "region": ["Region", "Geo"],
+      "competitor": ["Competitor", "Primary Competitor", "Incumbent"],
+      "technical_win": ["Technical Win", "Tech Win", "Technically Won"],
+      "meddic_pain": ["Identify Pain", "Pain"],
+      "meddic_champion": ["Champion"],
+      "meddic_economic_buyer": ["Economic Buyer", "EB"],
+      "meddic_metric": ["Metric", "Metrics"],
+      "meddic_decision_process": ["Decision Making Process", "Decision Process"],
+      "meddic_decision_criteria": ["Decision Making Criteria", "Decision Criteria"],
+      "next_step": ["Next Step", "Next Steps"]
+    },
+
+    "stage_columns": {
+      "deal_id": ["Record Id", "Record Id (Stage History)", "Deal Id"],
+      "deal_name": ["Deal Name"],
+      "moved_to": ["Moved To", "To Stage", "New Stage"],
+      "from_stage": ["Stage (Stage History)", "From Stage", "Old Stage"],
+      "stage_duration_days": ["Stage Duration (Calendar Days)", "Stage Duration"],
+      "modified_time": ["Modified Time (Stage History)", "Modified Time", "Change Time"]
+    },
+
+    "notes_columns": {
+      "note_id": ["Record Id", "Note Id"],
+      "deal_id": ["Parent ID.id", "Parent Id", "Associated_Id", "Deal Id"],
+      "deal_name": ["Parent ID", "Deal Name"],
+      "content": ["Note Content", "Content", "Note"],
+      "owner": ["Note Owner", "Created By", "Owner"],
+      "created_time": ["Created Time", "Created"]
+    },
+
+    "se_platform_columns": {
+      "_doc": "Maps a Vivun / Prelay / Cuvama (or similar) export. All optional. A technical-win flag here is a CLAIM until a call corroborates it.",
+      "deal_id": ["Opportunity Id", "Deal Id", "CRM Id"],
+      "account": ["Account", "Company"],
+      "se_owner": ["SE", "Sales Engineer", "Owner"],
+      "technical_win_flag": ["Technical Win", "Tech Win", "Won Technically"],
+      "poc_status": ["POC Status", "POV Status", "Evaluation Status"],
+      "eval_criteria": ["Success Criteria", "Exit Criteria", "Evaluation Criteria"],
+      "activity_count": ["Activities", "Engagements", "Touches"]
+    },
+
+    "recording_link_column": "report_url",
+    "_recording_doc": "Where the transcript's recording URL is read from (transcript header field). 'no link' renders if absent."
+  },
+
+  "stage_map": {
+    "_doc": "Map each raw CRM stage label to a canonical PSCraft rung. Fill after Phase 2 prints the real labels. Canonical rungs: intro_qualify, tech_discovery, tailored_demo, poc_pov, tech_validation, proposal, negotiation, won, lost, stalled.",
+    "_example": {"Discovery": "tech_discovery", "Demo": "tailored_demo", "POC / Evaluation": "poc_pov", "Technical Validation": "tech_validation", "Proposal": "proposal", "Negotiation": "negotiation", "Closed Won": "won", "Closed Lost": "lost", "Hold": "stalled"}
+  },
+  "stage_order": ["intro_qualify", "tech_discovery", "tailored_demo", "poc_pov", "tech_validation", "proposal", "negotiation", "won", "lost", "stalled"],
+  "_stage_note": "These canonical rungs drive the rubric's stage_expectations (the NA logic). A model infers each call's SE stage; if no CRM stage exists it infers from the call's own arc. proposal_negotiation in the rubric matrix covers both proposal and negotiation rungs.",
+
+  "stalled_definition": {
+    "_doc": "Which deals count as stalled. derived_from='auto' lets link.py detect it; set 'config' to force.",
+    "derived_from": "auto",
+    "stage_names": [],
+    "inactivity_days": null
+  },
+
+  "technical_win": {
+    "_doc": "How the craft-side outcome anchor is resolved. 'inferred' = a model reads the corpus (plus any POC criteria doc / SE-platform flag) and decides the state per rubric.technical_win.definition. If the SE platform or CRM carries a flag, name the column; a flag with no corroborating call moment is a CLAIM, never proof.",
+    "source": "inferred",
+    "crm_or_platform_flag_column": null
+  },
+
+  "scoring_universe": {
+    "_doc": "Which calls feed the technical-explainer SCORES (the rest are context only). PSCraft scores whoever carried the technical-explainer role on a call.",
+    "score_only_calls_with_technical_explainer": true,
+    "include_external_accounts_without_crm_deal": true,
+    "exclude_call_status": ["no_show", "aborted"],
+    "exclude_transcript_quality": ["poor"],
+    "internal_calls_are_context_only": true
+  },
+
+  "roles": {
+    "_doc": "Phase 5 infers, per call, WHO carried the technical-explainer role (title-agnostic). overrides[] forces an archetype/level/exclusion for a person. archetype in {solution-engineer, seller-doing-technical, se-leader, ae-nontechnical, partner-external}. seniority (level) in {associate, mid, senior, principal, lead}; model-inferred if omitted. name_fixes consolidates display-name variants.",
+    "overrides": [],
+    "_overrides_example": [{"email": "se@yourcompany.com", "name": "Sam Lin", "archetype": "solution-engineer", "seniority": "senior", "kind": "dedicated_se", "joined": "2025-05-01", "left": null, "exclude_from_ranking": false}],
+    "name_fixes": [],
+    "_name_fixes_example": [{"canonical_email": "sam.lin@yourcompany.com", "canonical_name": "Sam Lin", "variants": ["Sam", "sam l", "Conference Room (Sam)"]}]
+  },
+
+  "rubric": {
+    "_doc": "Overrides on schema/rubric.template.json. Leave {} to use defaults. You can override dimension weights per archetype, role bars, or per-level seniority bars.",
+    "overrides": {}
+  },
+
+  "reporting": {
+    "_doc": "Reporting levels. call, se (per technical explainer), and deal are ALWAYS produced. quarter/QoQ trend is produced ONLY if the corpus spans >= min_quarters distinct quarters (inferred from call dates); otherwise it is skipped with a stated caveat.",
+    "levels": ["call", "se", "deal"],
+    "quarter_trend": "auto",
+    "min_quarters": 2
+  },
+
+  "min_calls_to_rank_se": 3,
+  "_min_calls_doc": "Technical explainers with fewer scored calls than this are shown in a directional appendix, not the ranked leaderboard.",
+
+  "caveats": [
+    "The corpus is calls/demos only. Async POC work, email, Slack, and in-person whiteboarding are not included; absence of a behavior in the corpus is flagged, not penalized.",
+    "Craft scores are kept separate from BOTH the Technical Win and the business (deal) outcome by design.",
+    "PSCraft scores the technical explainer on each call, whoever carried that role; a seller who did the technical explaining is recognized and scored for it."
+  ]
+}

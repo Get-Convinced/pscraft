@@ -1,0 +1,17 @@
+# Never ship secrets or anyone's data
+.env
+*.env
+*.key
+*.pem
+credentials*
+
+# Operator working data: a run writes everything under a working folder (work/ by convention).
+# The fictional synthetic INPUTS under examples/synthetic/raw are tracked; the generated output is not.
+work/
+runs/
+examples/synthetic/work/
+
+# Python / OS
+__pycache__/
+*.pyc
+.DS_Store
