@@ -103,7 +103,7 @@ function scoreBreakdown(rp,rec,openByDefault,tag){
   const rows=ds.map(d=>{const x=det[d];return `<tr><td style="width:30px;vertical-align:top">${sc(x.score)}</td><td><b>${esc(DN[d]||d)}</b>`
     +`${(x.confidence&&x.confidence!=='high')?` <span class="tag">${esc(x.confidence)} confidence</span>`:''}`
     +`<div class="small" style="color:#3f3f3f">${esc(x.why||'')}</div>`
-    +`${x.quote?q('Rep',x.quote,rec):''}</td></tr>`;}).join('');
+    +`${x.evidence?`<div class="q rep" style="white-space:pre-wrap;margin-top:6px">${esc(x.evidence)}${rec?`<cite><a class=lnk href="${esc(rec)}" target=_blank>recording</a></cite>`:''}</div>`:(x.quote?q('Rep',x.quote,rec):'')}</td></tr>`;}).join('');
   return `<details style="margin-top:10px"${openByDefault?' open':''}><summary>How the ${num(rp.composite)?'<b>'+rp.composite+'</b>':''} craft score was built${tag?' ('+esc(tag)+')':''}, all ${ds.length} dimensions in play, worst first</summary>`
     +`<div class="card" style="margin-top:8px"><table>${rows}</table></div>`
     +`<p class="small muted" style="margin-top:6px">The composite is the role-weighted mean of these dimensions. A move not yet due at this call's stage is scored NA and left out.</p></details>`;
@@ -115,11 +115,12 @@ function radar(seriesList, size=300){ // seriesList:[{name,color,vals:{group:val
   let g='';
   for(let ring=1;ring<=5;ring++){const r=R*ring/5;let p=GKEYS.map((_,i)=>pt(i,r).join(',')).join(' ');g+=`<polygon points="${p}" fill="none" stroke="#eee" stroke-width="1"/>`;}
   GKEYS.forEach((k,i)=>{const[x,y]=pt(i,R);g+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#eee"/>`;
-    const[lx,ly]=pt(i,R+22);g+=`<text x="${lx}" y="${ly}" font-size="11" fill="#777" text-anchor="middle" dominant-baseline="middle">${esc(GLABEL[k]||k)}</text>`;});
+    const[lx,ly]=pt(i,R+16);const anchor=lx<cx-4?'end':lx>cx+4?'start':'middle';
+    g+=`<text x="${lx}" y="${ly}" font-size="10.5" fill="#777" text-anchor="${anchor}" dominant-baseline="middle">${esc(GLABEL[k]||k)}</text>`;});
   seriesList.forEach(s=>{const pts=GKEYS.map((k,i)=>{const v=s.vals[k];return pt(i, v==null?0:R*v/max);});
     g+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="${s.color}22" stroke="${s.color}" stroke-width="2"/>`;
     pts.forEach((p,i)=>{if(s.vals[GKEYS[i]]!=null)g+=`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${s.color}"/>`;});});
-  return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="max-width:100%">${g}</svg>`;
+  return `<svg viewBox="-84 -6 ${size+168} ${size+12}" width="${size+90}" height="${size}" style="max-width:100%">${g}</svg>`;
 }
 
 // failure points for a given rep across calls (returns [{call,account,date,fp}])

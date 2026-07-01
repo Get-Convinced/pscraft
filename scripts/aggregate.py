@@ -110,7 +110,7 @@ def main():
                 "signature":deslop(r.get("signature")),"buyer_reaction":deslop(r.get("buyer_reaction")),
                 "scores":{d:(cells.get(d) or {}).get("score") for d in DIMS},
                 # full per-dim rationale so every composite is self-evident (scored dims only)
-                "score_detail":{d:deslop({"score":c.get("score"),"confidence":c.get("confidence"),"why":c.get("why"),"quote":c.get("quote")})
+                "score_detail":{d:deslop({"score":c.get("score"),"confidence":c.get("confidence"),"why":c.get("why"),"quote":c.get("quote"),"evidence":c.get("evidence")})
                                 for d in DIMS for c in [cells.get(d) or {}] if isinstance(c.get("score"),(int,float))}})
         calls_out.append({"call_id":cid,"slug":cid,"account":co["account"],"date":co.get("date"),"title":co.get("title"),
             "recording_url":co.get("recording_url"),"stage":co.get("stage"),"unit_index":co.get("unit_index"),

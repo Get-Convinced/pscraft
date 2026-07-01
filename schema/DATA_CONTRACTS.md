@@ -33,7 +33,7 @@ actor is the **technical explainer** on that call (role-inferred, title-agnostic
 ```
 {call_id, unit_index, account, date, title, recording_url, se_stage,
  explainers:[{rep_key, rep_name, archetype, kind, composite,
-        scores:{<DIM_ID>:{score:1-5|"NA", confidence:"high|medium|low", why, quote}},
+        scores:{<DIM_ID>:{score:1-5|"NA", confidence:"high|medium|low", why, quote, evidence}},   // evidence = the minimal self-contained verbatim exchange (speaker-labelled) that makes the score self-evident without the recording
         demo_lenses:{demo2win_tell_show_tell, great_demo_last_thing_first, anti_feature_dump, persona_tailoring}|null,
         gap_contributions:[{gap, status:"addressed_written|addressed_verbal|acknowledged_open|ignored", quote}],
         failure_points:[{label, dim, buyer_quote, rep_quote, why}],

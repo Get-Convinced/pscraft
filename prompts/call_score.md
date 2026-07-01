@@ -50,7 +50,7 @@ DEMO CALIBRATION (apply when a demo occurred; return the per-lens read in demo_l
 
 Return ONE JSON object:
 {"reps":[{"rep_key":"...","rep_name":"...","archetype":"...","kind":"dedicated_se|seller_doing_technical",
-  "scores":{"<DIM_ID>":{"score":4,"confidence":"high|medium|low","why":"<one line>","quote":"<VERBATIM, spoken BY THE EXPLAINER, required for 4/5 and 1/2>"}, ... one entry per responsible dim ...},
+  "scores":{"<DIM_ID>":{"score":4,"confidence":"high|medium|low","why":"<one line: the read>","quote":"<the single most load-bearing VERBATIM line spoken BY THE EXPLAINER>","evidence":"<the minimal SELF-CONTAINED exchange, verbatim and speaker-labelled, across as many turns as it takes to make this score obvious to someone who did NOT hear the call: the buyer's setup or question AND the explainer's reply (and a follow-up turn if the read hinges on it). Reason about how much to include, enough to be self-evident, no more.>"}, ... one entry per responsible dim ...},
   "demo_lenses":{"demo2win_tell_show_tell":"<one line: was it Context->Capability->Impact?>","great_demo_last_thing_first":"<did they open with the compelling outcome?>","anti_feature_dump":"<feature-dump instances, or 'none'>","persona_tailoring":"<was depth tuned to who was in the room?>"}  (or null if no demo occurred on this call),
   "gap_contributions":[{"gap":"<a technical/security/integration concern the PROSPECT voiced on THIS call>","status":"addressed_written|addressed_verbal|acknowledged_open|ignored","quote":"<the explainer's line addressing it, or '' if ignored>"}],
   "failure_points":[{"label":"<short>","dim":"<DIM id>","buyer_quote":"<verbatim buyer line that set it up, or ''>","rep_quote":"<verbatim explainer line that is the failure>","why":"<why it cost technical conviction>"}],
@@ -59,6 +59,7 @@ Return ONE JSON object:
 }]}
 
 RULES (these define the method):
+- EVIDENCE MUST BE SELF-EVIDENT. For each scored dimension, `evidence` is the exchange a reader needs to AGREE with your score WITHOUT opening the recording. Reason about how much to print: one line when a single line proves it; the buyer's setup plus your two or three reply turns when the read depends on the back-and-forth. Speaker-label every turn (e.g. "Buyer: ..." / "Rep: ..."). Keep it verbatim. Never make the reader go to the recording to understand why the score is what it is, and never pad it beyond what the judgment needs.
 - QUALITATIVE FIRST: failure_points are the point. Each must cite the EXPLAINER's own line (rep_quote) as the failure, not just the buyer's concern. 1-3 per explainer.
 - QUOTE = THE EXPLAINER'S WORDS. For any craft dimension the evidence quote must be a line spoken BY THE EXPLAINER being scored. A buyer's objection is the setup, never the score: find the explainer's reply and quote THAT.
 - READ THE WHOLE TURN. When the buyer raises a technical/security/integration concern, quote the explainer's reply. If they answered with a concrete mechanism, architecture, doc, or config, the floor is 2, not 1.
