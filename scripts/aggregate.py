@@ -77,8 +77,13 @@ def main():
     calls_out=[]; rep_calls=defaultdict(list); rep_dimvals=defaultdict(lambda:defaultdict(list))
     rep_fails=defaultdict(list); rep_sigs=defaultdict(list); deal_callcomps=defaultdict(list)
     org_dimvals=defaultdict(list); rep_arch={}
+    cid2unit={}   # map every call to its deal-unit via the linker, since call_out may not carry unit_index
+    for _u in opp.values():
+        for _cc in set((_u.get("call_ids") or [])+(_u.get("in_scope_call_ids") or [])): cid2unit[_cc]=_u["unit_index"]
     for co in callout:
         cid=co["call_id"]; meta=calls.get(cid,{})
+        uidx=co.get("unit_index") if co.get("unit_index") is not None else cid2unit.get(cid)
+        rec=co.get("recording_url") or meta.get("recording_url")   # backfill the recording link from the transcript header
         reps_pay=[]
         for r in co.get("reps",[]):
             if A.excluded_rep(r["rep_name"],cfg): continue
@@ -97,13 +102,13 @@ def main():
                 if isinstance(cell.get("score"),(int,float)):
                     rep_dimvals[key][dim].append(cell["score"]); org_dimvals[dim].append(cell["score"])
             for fp in (r.get("failure_points") or []):
-                rep_fails[key].append({**fp,"account":co["account"],"slug":co["account"],"call_id":cid,"date":co.get("date"),"recording_url":co.get("recording_url")})
+                rep_fails[key].append({**fp,"account":co["account"],"slug":co["account"],"call_id":cid,"date":co.get("date"),"recording_url":rec})
             if r.get("signature") and (r["signature"] or {}).get("quote"):
-                rep_sigs[key].append({**r["signature"],"account":co["account"],"call_id":cid,"date":co.get("date"),"recording_url":co.get("recording_url")})
+                rep_sigs[key].append({**r["signature"],"account":co["account"],"call_id":cid,"date":co.get("date"),"recording_url":rec})
             rep_calls[key].append({"call_id":cid,"account":co["account"],"date":co.get("date"),"title":co.get("title"),
-                "unit_index":co.get("unit_index"),"composite":cmp,"buyer":(r.get("buyer_reaction") or {}).get("state"),
+                "unit_index":uidx,"composite":cmp,"buyer":(r.get("buyer_reaction") or {}).get("state"),
                 "top_fail":(r.get("failure_points") or [{}])[0].get("label")})
-            if cmp is not None and co.get("unit_index") is not None: deal_callcomps[co["unit_index"]].append((key,cmp))
+            if cmp is not None and uidx is not None: deal_callcomps[uidx].append((key,cmp))
             reps_pay.append({"name":r["rep_name"],"archetype":arch,"kind":r.get("kind"),"composite":cmp,
                 "demo_lenses":deslop(r.get("demo_lenses")),"gap_contributions":deslop(r.get("gap_contributions") or []),
                 "failure_points":[deslop(x) for x in (r.get("failure_points") or [])],
@@ -113,8 +118,8 @@ def main():
                 "score_detail":{d:deslop({"score":c.get("score"),"confidence":c.get("confidence"),"why":c.get("why"),"quote":c.get("quote"),"evidence":c.get("evidence")})
                                 for d in DIMS for c in [cells.get(d) or {}] if isinstance(c.get("score"),(int,float))}})
         calls_out.append({"call_id":cid,"slug":cid,"account":co["account"],"date":co.get("date"),"title":co.get("title"),
-            "recording_url":co.get("recording_url"),"stage":co.get("stage"),"unit_index":co.get("unit_index"),
-            "deal_slug":A.slug(co["account"] or f"deal-{co.get('unit_index')}"),"reps":reps_pay})
+            "recording_url":rec,"stage":co.get("stage"),"unit_index":uidx,
+            "deal_slug":A.slug(co["account"] or f"deal-{uidx}"),"reps":reps_pay})
     calls_out.sort(key=lambda c:c.get("date") or "")
 
     # ---- reps: cross-call pattern (recurring failure + signature) + composite ----

@@ -395,11 +395,22 @@ function viewDeal(slug){
   let h=`<div class="crumb"><a href="#deals">Deals</a> / ${esc(d.account)}</div>
    <div class="hero"><div class="eyebrow">Deal post-mortem · ${pill(d.outcome)} · ${money(d.arr)}</div><h1>${esc(d.account)}</h1><p>${esc(pm.headline||'')}</p></div>`;
   if(pm.arc)h+=`<div class="section"><div class="kicker">Arc</div><p class="lead">${esc(pm.arc)}</p></div>`;
-  const lp=pm.lost_pressure||{};
-  if(lp.moment)h+=`<div class="section"><div class="kicker">Where it lost pressure</div><h2>${esc(lp.date||'')}</h2>${q('',lp.moment)}<p class="small" style="color:#3f3f3f"><b>Why:</b> ${esc(lp.why)}</p></div>`;
+  const lp=pm.lost_conviction||{};
+  if(lp&&lp.moment)h+=`<div class="section"><div class="kicker">Where technical conviction was lost</div><h2>${esc(lp.date||'')}</h2>${q('',lp.moment)}<p class="small" style="color:#3f3f3f"><b>Why:</b> ${esc(lp.why)}</p></div>`;
   if(pm.why_hold){h+=`<div class="section"><div class="kicker">How it failed</div><p class="lead">${esc(pm.why_hold)}</p>`;
     if(pm.stall_archetype)h+=`<p class="small"><b>Pattern:</b> ${esc(archLabel(pm.stall_archetype))} · ${pm.coachable?'coachable':'structural'}</p>`;
     if(pm.one_change)h+=`<div class="good" style="border-left-color:var(--red)"><b>What they should have done:</b> ${esc(pm.one_change)}</div>`;
+    h+=`</div>`;}
+  const pa=pm.poc_arc||{};
+  if(pa&&pa.criteria_defined!==undefined)h+=`<div class="section"><div class="kicker">POC arc</div><p class="small">Exit criteria defined: <b>${pa.criteria_defined?'yes':'no'}</b>${pa.criteria_met?' · met: '+esc(String(pa.criteria_met)):''}${pa.criteria_failed?' · failed: '+esc(String(pa.criteria_failed)):''} · written exit: <b>${pa.exit_written?'yes':'no'}</b></p></div>`;
+  const tw=d.technical_win;
+  if(tw){const TWL={won_written:'Won (written)',won_verbal:'Won (verbal)',in_validation:'In validation',lost_technical:'Lost technical',not_reached:'Not reached',na:'N/A'};
+    const GST={addressed_written:['closed, in writing','var(--c5b)'],addressed_verbal:['closed, verbally','var(--c4b)'],acknowledged_open:['open','var(--c3b)'],ignored:['ignored','var(--c1b)']};
+    h+=`<div class="section"><div class="kicker">Technical Win</div><h2>Was the solution won on the merits?</h2><p class="lead">State: <b>${esc(TWL[tw.technical_win_state]||tw.technical_win_state||'-')}</b>. <a class=lnk href="#techwin">See all gap ledgers &rarr;</a></p>`;
+    const gl=tw.gap_ledger||[];
+    if(gl.length){h+=`<div class="card" style="overflow-x:auto"><table><tr><th>Concern the buyer raised</th><th>Status</th><th>Evidence</th></tr>`;
+      gl.forEach(g=>{const st=GST[g.status]||[g.status,'#888'];h+=`<tr><td>${esc(g.gap)}${g.raised_by?' <span class="tag">'+esc(g.raised_by)+'</span>':''}</td><td><b style="color:${st[1]}">${esc(st[0])}</b></td><td class="small muted">${esc((g.evidence&&g.evidence.quote)||'')}</td></tr>`;});
+      h+=`</table></div>`;}
     h+=`</div>`;}
   const mc=pm.meddic_check||[];
   if(mc.length){const badge={observed:'var(--c5b)',claimed:'var(--c2b)',contradicted:'var(--c1b)',absent:'#999'};
@@ -408,7 +419,7 @@ function viewDeal(slug){
     h+=`</table></div><p class="small muted" style="margin-top:6px">'claimed' = in the CRM but never seen being gathered on a call, so treat as unverified.</p></div>`;}
   if((d.calls||[]).length){h+=`<div class="section"><div class="kicker">The calls</div><h2>Read any call.</h2><div class="card">`;
     d.calls.forEach(c=>{const reps=(c.reps||[]).map(rp=>`${esc(rp.name)} ${num(rp.composite)?sc(rp.composite):''}`).join(' · ');
-      h+=`<div style="padding:8px 0;border-bottom:1px solid #f1f1f1"><a class=lnk href="#call/${esc(c.call_id)}">${esc(c.date)} · ${esc((c.title||'').slice(0,70))}</a> <span class="tag">${reps}</span></div>`;});
+      h+=`<div style="padding:8px 0;border-bottom:1px solid #f1f1f1"><a class=lnk href="#call/${esc(c.call_id)}">${esc(c.date)} · ${esc((c.title||'').slice(0,70))}</a>${c.recording_url?' · <a class=lnk href="'+esc(c.recording_url)+'" target=_blank>recording</a>':''} <span class="tag">${reps}</span></div>`;});
     h+=`</div></div>`;}
   return h;
 }
