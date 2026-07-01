@@ -233,6 +233,8 @@ consistency check.
 ```bash
 python3 scripts/digest.py                 # builds analysis/council_digest.json
 # run four blind SE seats + a synthesis seat (prompts/council.md) -> analysis/council_output.json
+# also run prompts/diagnosis.md over the digest -> analysis/diagnosis.json (the specific, actionable
+# org diagnosis that opens the report: names the concrete move missed on nearly every call + what to do)
 ```
 
 Four seats blind to each other (technical-discovery diagnostician, demo-craft coach, POC/validation

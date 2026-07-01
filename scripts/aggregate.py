@@ -211,6 +211,8 @@ def main():
     if os.path.exists(adh_path): org["adherence"]=A.read_json(adh_path)
     cnc_path=os.path.join(wd,"analysis","council_output.json")
     if os.path.exists(cnc_path): org["council"]=deslop(A.read_json(cnc_path))
+    dg_path=os.path.join(wd,"analysis","diagnosis.json")
+    if os.path.exists(dg_path): org["diagnosis"]=deslop(A.read_json(dg_path))
     # ---- technical win (the craft-side OUTCOME anchor), reported SEPARATELY from craft + business outcome ----
     tw_states=Counter(t.get("technical_win_state") for t in tw.values() if t.get("technical_win_state"))
     tw_reached=sum(tw_states.get(s,0) for s in ("won_written","won_verbal"))

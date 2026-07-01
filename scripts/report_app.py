@@ -86,7 +86,8 @@ function scColor(v){const r=Math.round(v);const m={5:['var(--c5a)','var(--c5b)']
 function sc(v){if(!num(v))return '<span class="sc" style="background:#f3f3f3;color:#bbb">NA</span>';const[a,b]=scColor(v);return `<span class="sc" style="background:${a};color:${b}">${(+v.toFixed(2)).toString().replace(/\.00$/,'')}</span>`;}
 function pill(k){k=(k||'').toLowerCase();return `<span class="pill ${esc(k)}">${esc(k||'-')}</span>`;}
 function q(speaker,txt,rec){if(!txt)return'';const rep=/^(rep|seller)/i.test(speaker||'');const cite=[esc(speaker),rec?`<a class=lnk href="${esc(rec)}" target=_blank>recording</a>`:''].filter(Boolean).join(' ');return `<div class="q ${rep?'rep':''}">${esc(txt)}${cite?`<cite>${cite}</cite>`:''}</div>`;}
-const ARCH={"feature-tour-no-discovery":"Feature tour with no technical discovery","criteria-less-poc":"POC run with no exit criteria","poc-scope-creep":"POC drifted, scope crept","security-blocker-unresolved":"A security or integration blocker went unresolved","champion-not-enabled":"Technical champion left unable to sell internally","lost-to-competitor-technical":"Lost the technical evaluation to a competitor","value-not-quantified":"Value never tied to the buyer's technical success criteria","technical-win-no-deal":"Technical win reached, deal lost elsewhere","structurally-dead-disqualify":"Structurally dead, parked instead of disqualified","won":"Won","still-active":"Still active"};
+const ARCH={"feature-tour-no-discovery":"Feature tour with no technical discovery","criteria-less-poc":"POC run with no exit criteria","poc-scope-creep":"POC drifted, scope crept","security-blocker-unresolved":"A security or integration blocker went unresolved","champion-not-enabled":"Technical champion left unable to sell internally","lost-to-competitor-technical":"Lost the technical evaluation to a competitor","value-not-quantified":"Value never tied to the buyer's technical success criteria","technical-win-no-deal":"Technical win reached, deal lost elsewhere","structurally-dead-disqualify":"Structurally dead, parked instead of disqualified","economic_buyer_budget_not_secured":"Economic buyer or budget not secured","scope_expanding_no_exit_criteria":"Scope kept expanding with no exit criteria","criteria_less_poc":"POC ran with no exit criteria","no_committed_next_step":"No committed next step","won":"Won","still-active":"Still active"};
+function archLabel(k){return ARCH[k]||String(k||'').replace(/[_-]+/g,' ').replace(/(^|\s)\w/g,c=>c.toUpperCase());}
 
 // group average from a per-dim map
 function groupAvgs(dimMap){const out={};GKEYS.forEach(g=>{const vs=DIMS.filter(d=>DG[d]===g).map(d=>dimMap[d]).filter(num);out[g]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;});return out;}
@@ -208,9 +209,16 @@ function viewCouncil(){
 function viewOrg(){
   const o=D.org;
   const floor=o.floor_dims.map(f=>`${f.name} (${f.avg})`).join(', ');
+  const dg=o.diagnosis||{};
   let h=`<div class="hero"><div class="eyebrow">${esc(o.org_name)} · per-call audit · ${esc(o.as_of)}</div>
-    <h1>Every call read on its own. The same few moves missed on nearly all of them.</h1>
-    <p>${o.n_calls_scored} calls scored one by one across ${o.n_reps} reps and ${o.n_deals} deals. Craft is scored apart from outcome. The floor repeats everywhere: <b>${esc(floor)}</b>. Numbers are aggregated here; open any call to see the transcript, the failure, and why.</p></div>`;
+    <h1>${dg.headline?esc(dg.headline):'Every call read on its own. The same few moves missed on nearly all of them.'}</h1>
+    <p>${dg.floor_summary?esc(dg.floor_summary):(o.n_calls_scored+' calls scored across '+o.n_reps+' engineers and '+o.n_deals+' deals. The floor repeats everywhere: '+esc(floor)+'.')}</p>
+    <p class="small muted">${o.n_calls_scored} calls scored one by one; craft is scored apart from outcome. Open any call to see the transcript, the exchange, and why.</p></div>`;
+  if((dg.fixes||[]).length){
+    h+=`<div class="section"><div class="kicker">What to fix</div><h2>The moves to change, worst first.</h2><div class="grid g2">`;
+    dg.fixes.forEach((f,i)=>h+=`<div class="card"><h3>${i+1}. ${esc(f.move)}</h3><div class="small" style="color:#3f3f3f;margin-top:6px"><b>On the calls:</b> ${esc(f.what_happens)}</div><div class="small" style="margin-top:7px;padding:8px 11px;background:#eef7f3;border-radius:8px"><b>Do this next call:</b> ${esc(f.do_this)}</div></div>`);
+    h+=`</div></div>`;
+  }
   // org radar + KPIs
   const ga=groupAvgs(o.dim_avgs);
   h+=`<div class="section"><div class="kicker">The shape of the gap</div><h2>Where the team is strong and where it is bare.</h2>
@@ -222,7 +230,7 @@ function viewOrg(){
   if((o.stall_archetypes||[]).length){
     h+=`<div class="section"><div class="kicker">Why deals die</div><h2>The same handful of stalls, again and again.</h2><div class="grid g2">`;
     o.stall_archetypes.forEach(a=>{const ex=(a.examples||[]).map(x=>`<a class=lnk href="#deal/${esc(x.slug)}">${esc(x.account)}</a>`).join(', ');
-      h+=`<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><h3>${esc(ARCH[a.key]||a.key)}</h3><span class="tag">${a.n} deals</span></div><p class="small muted" style="margin:6px 0 0">e.g. ${ex}</p></div>`;});
+      h+=`<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><h3>${esc(archLabel(a.key))}</h3><span class="tag">${a.n} deals</span></div><p class="small muted" style="margin:6px 0 0">e.g. ${ex}</p></div>`;});
     h+=`</div><p class="small" style="margin-top:10px"><a class=lnk href="#deals">All deal post-mortems &rarr;</a></p></div>`;
   }
   // stark examples: worst failure points on floor dims
@@ -390,7 +398,7 @@ function viewDeal(slug){
   const lp=pm.lost_pressure||{};
   if(lp.moment)h+=`<div class="section"><div class="kicker">Where it lost pressure</div><h2>${esc(lp.date||'')}</h2>${q('',lp.moment)}<p class="small" style="color:#3f3f3f"><b>Why:</b> ${esc(lp.why)}</p></div>`;
   if(pm.why_hold){h+=`<div class="section"><div class="kicker">How it failed</div><p class="lead">${esc(pm.why_hold)}</p>`;
-    if(pm.stall_archetype)h+=`<p class="small"><b>Pattern:</b> ${esc(ARCH[pm.stall_archetype]||pm.stall_archetype)} · ${pm.coachable?'coachable':'structural'}</p>`;
+    if(pm.stall_archetype)h+=`<p class="small"><b>Pattern:</b> ${esc(archLabel(pm.stall_archetype))} · ${pm.coachable?'coachable':'structural'}</p>`;
     if(pm.one_change)h+=`<div class="good" style="border-left-color:var(--red)"><b>What they should have done:</b> ${esc(pm.one_change)}</div>`;
     h+=`</div>`;}
   const mc=pm.meddic_check||[];

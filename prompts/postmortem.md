@@ -31,12 +31,14 @@ CRM stage history: {{STAGE_HISTORY}}
 Rep notes (suspect, often optimistic): {{NOTES}}
 Per-call failure findings: {{FINDINGS}}
 
+STALL ARCHETYPES (set stall_archetype to EXACTLY one of these tokens, verbatim; do NOT invent a token): feature-tour-no-discovery, criteria-less-poc, poc-scope-creep, security-blocker-unresolved, champion-not-enabled, lost-to-competitor-technical, value-not-quantified, technical-win-no-deal, economic-buyer-not-secured, no-committed-next-step, structurally-dead-disqualify, won, still-active.
+
 Return JSON: {
 "headline":"<one sentence on the deal's state and why, technical side>",
 "arc":"<short: how it opened technically, what moved it, where it stuck>",
 "lost_conviction":{"date":"<call date>","moment":"<the verbatim line where technical conviction was lost>","why":"<why that moment cost the deal>"}  (or null if never lost),
 "why_hold":"<the real reason it parked or lost, in plain words>",
-"stall_archetype":"<one of the archetypes listed above>",
+"stall_archetype":"<EXACTLY one token from the STALL ARCHETYPES list above, verbatim>",
 "poc_arc":{"criteria_defined":true,"criteria_met":"<count or ''>","criteria_failed":"<count or ''>","exit_written":false},
 "coachable":true,
 "meddic_check":[{"field":"metric|economic_buyer|decision_process|decision_criteria|champion|pain|competition|paper|technical_win","crm_value":"<or ''>","status":"observed|claimed|contradicted|absent","evidence":"<call quote if observed/contradicted, else ''>"}],
